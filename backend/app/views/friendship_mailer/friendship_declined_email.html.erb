@@ -1,0 +1,20 @@
+<p>Hello <%= @sender_nickname %></p>
+
+<p>We regret to inform you that your friend request on <%= ApplicationMailer::APP_NAME %> has been declined.</p>
+
+<p>
+  Details of the Declined Friend Request:<br>
+  Date Declined: <%= DateTime.now.in_time_zone(@sender_timezone).strftime('%d.%m.%Y at %H:%M') %><br>
+  Declined By: <%= @receiver_nickname %><br>
+</p>
+
+<p>
+  We understand that this may be disappointing news. However, we encourage you to continue using <%= ApplicationMailer::APP_NAME %> to connect with other users and find new friends with similar interests.
+</p>
+
+<%= render 'layouts/footer' %>
+
+<p>
+  P.S. You can still view and manage your friend requests by clicking the link below:
+  <%= link_to "Friend Request", @url %>
+</p>

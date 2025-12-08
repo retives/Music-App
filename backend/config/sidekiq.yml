@@ -1,0 +1,9 @@
+development:
+  :concurrency: 1
+production:
+  :concurrency: <%= ENV['SIDEKIQ_CONCURRENCY'] || 5 %>
+  :queues:
+    - default
+stage:
+  :concurrency: 1
+:max_retries: 1

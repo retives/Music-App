@@ -1,0 +1,16 @@
+<p>Hello <%= @friendship.sender.nickname %>, </p>
+
+<p>We are thrilled to inform you that your friend request on <%= ApplicationMailer::APP_NAME %> has been accepted!</p>
+
+<p>
+Details of the Accepted Friend Request:<br>
+Date Accepted: <%= @friendship.updated_at.in_time_zone(@friendship.sender.timezone).strftime('%d.%m.%Y at %H:%M') %><br>
+Accepted By: <%= @friendship.receiver.nickname %><br>
+</p>
+
+<p>
+You can now connect and share playlists with your new friend on <%= ApplicationMailer::APP_NAME %>.
+We hope that you both have a great time exploring new music together!
+</p>
+
+<%= render 'layouts/footer' %>

@@ -1,0 +1,10 @@
+Dear <%= @friend.nickname %>, we have great news for you!
+
+You friend, <%= @user.nickname %>, has returned to <%= ApplicationMailer::APP_NAME %> after some time away.
+
+To reconnect with <%= @user.nickname %>, just click the following link:
+<%= link_to "Sign Up", @url %> 
+
+If you have any questions or need assistance, feel free to contact our support team.
+
+<%= render 'layouts/footer' %>

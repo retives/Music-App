@@ -1,0 +1,40 @@
+:root {
+    --toastify-toast-width: max-content !important;
+}
+
+/* Scrollbars https://caniuse.com/?search=%3A%3A-webkit-scrollbar */
+/* Chrome, Endge, Opera, Safari; See https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar */
+*:not(.scrollbar-on)::-webkit-scrollbar {
+    display: none;
+}
+
+/* Firefox https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-width */
+*:not(.scrollbar-on) {
+    scrollbar-width: none;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #021727;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root ~ p:last-child {
+    margin: 0;
+    display: block;
+    color: var(--M3-sys-dark-primary, #d0bcff);
+}
+
+#root ~ p:last-child a {
+    color: var(--M3-sys-dark-on-primary-container, #eaddff);
+}

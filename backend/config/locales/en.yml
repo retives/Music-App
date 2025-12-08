@@ -1,0 +1,91 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t "hello"
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t("hello") %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   "true": "foo"
+#
+# To learn more, please read the Rails Internationalization guide
+# available at https://guides.rubyonrails.org/i18n.html.
+
+en:
+  errors:
+    authorization: User with provided credentials doesn't exist
+    too_many_attempts: Too many attempts
+    playlist_not_found: Playlist not found
+    too_many_comments: "you cannot add more than %{max_comment_count} comments in %{time_threshold} minute."
+    playlist_is_personal_for_comments: You cannot add comments for this playlist.
+    invalid_query: Invalid query parameter
+    your_email: You can't send friendship to yourself
+    user_not_exist: It seems that user with provided email does not have an account on our platform
+    uniqueness: has already been taken
+    accepted_friendship_exists: Accepted friendship already exists
+    pending_friendship_exists: Pending friendship already exists
+    friendships_not_found: Friend request not found.
+    image_size: Image size needs to be less than 10MB
+    user_type: "User type can be %{existing_types}"
+    not_avaliable_playlist: You can't remove song from playlist that is not yours or not shared with you
+    invalid_token: Invalid token
+    not_receiver: You are not receiver of this friendship
+    data_not_found: Data not found
+  info:
+    playlist_song_removed: Song removed from playlist
+    playlist_song_not_found: Song not found in playlist
+    friendship_accepted: "Friend request accepted. You are now connected with %{user_nickname}."
+    account_removed: Removed Account
+    friendship_status_changed: Your friendship status will be changed
+
+  active_admin:
+    dashboard: Dashboard
+    dashboard_welcome:
+      welcome: Welcome to Active Admin. This is the default dashboard page.
+      call_to_action: "To add dashboard sections, checkout 'app/admin/dashboard.rb'"
+    crud:
+      view: View
+      edit: Edit
+      delete: Delete
+    flash:
+      album_deleted: Album was successfully destroyed.
+
+  playlist:
+    likes: Likes
+    dislikes: Dislikes
+
+  playlist_type:
+    personal: private
+    shared: shared
+    open: public
+
+  pundit:
+    default: You cannot perform this action.
+    comment_policy:
+      create?: You cannot add comments for this playlist.
+
+  mailer:
+    invitation_email_subject: "You Have a New Friend on %{app_name}!"
+    playlist_milestone_email_subject: "Congratulations on creating %{milestone} playlists!"
+    accept_email_subject: "Your Friend Request on %{app_name} Has Been Accepted"
+    declined_email_subject: "Your Friend Request on %{app_name} Has Been Declined"
+    new_friend_request_email_subject: "You Have Received a New Friend Request on %{app_name}"
+    reconnection_invitation_email_subject: "%{app_name} - Reconnect with your Friend!"

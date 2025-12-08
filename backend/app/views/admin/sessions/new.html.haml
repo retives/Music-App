@@ -1,0 +1,20 @@
+#login
+  %h2
+    = active_admin_application.site_title(self)
+  = form_with method: :post do |f|
+    %fieldset.inputs
+      %ol
+        %li.input.required.autofocus.stringish.email
+          = f.label :email, 'Email', class: 'label'
+          = f.email_field :email, autofocus: true
+        %li.input.required.stringish.password
+          = f.label :password, 'Password', class: 'label'
+          = f.password_field :password
+        %li.boolean.input.optional
+          %label
+            = f.check_box :remember_me
+            Remember Me
+    %fieldset.actions
+      %ol
+        %li.action.input_action
+          = f.submit 'Login'

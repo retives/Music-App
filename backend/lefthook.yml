@@ -1,0 +1,21 @@
+pre-push:
+  commands:
+    gems-audit:
+      tags: backend security
+      run: bundle audit
+    gems-leak:
+      tags: backend find leak
+      run: bundle leak
+    gems-brakeman:
+      tags: brakeman security
+      run: |
+        brakeman --quiet \
+                 --no-pager \
+                 --no-summary
+
+pre-commit:
+  parallel: true
+  commands:
+    rubocop:
+          glob: "*.{rb}"
+          run: bundle exec rubocop --force-exclusion {all_files}

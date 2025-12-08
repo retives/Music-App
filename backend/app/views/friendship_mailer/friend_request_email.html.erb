@@ -1,0 +1,33 @@
+<p>Hello <%= @friendship.receiver.nickname %>,</p>
+
+<p>
+We are pleased to inform you that you have received a new friend request on <%= ApplicationMailer::APP_NAME %>
+</p>
+
+<b>Details of the Friend Request:</b>
+
+<p>
+Sender's Nickname: <%= @friendship.sender.nickname %>
+</p>
+
+<p>
+Date Submitted: <%= @friendship.created_at.strftime('%d.%m.%Y at %H:%M') %>
+</p>
+
+<p>
+To view and respond to this friend request, please click on the link below:
+</p>
+<%= link_to "My Friend page", @url %>
+
+<p>You can accept or decline the friend request by clicking the appropriate button.</p>                       
+
+<p>
+<%= link_to "Accept", @accept_url, class: "button button--green" %>
+<%= link_to "Decline", @decline_url, class: "button button--red" %>
+</p>
+
+<p>
+Thank you for using <%= ApplicationMailer::APP_NAME %>.
+</p>
+
+<%= render 'layouts/footer' %>

@@ -1,0 +1,840 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      in: header
+      name: Authorization
+      description: Bearer Token
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  "/api/v1/login":
+    post:
+      summary: User login
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: User logged in
+        '401':
+          description: Invalid password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: test.user.01@example.com
+                password:
+                  type: string
+                  example: secreT!123
+              required:
+              - email
+              - password
+  "/api/v1/logout":
+    delete:
+      summary: User logout
+      tags:
+      - Authentication
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: User logged out
+        '401':
+          description: not authorized
+  "/api/v1/playlists/{playlist_id}/comments":
+    parameters:
+    - name: playlist_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: index comments
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      tags:
+      - Comments
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Creates a comment for a playlist
+      tags:
+      - Comments
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: created
+        '422':
+          description: Unprocessable Entity
+        '401':
+          description: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+              - content
+  "/api/v1/genres":
+    parameters:
+    - name: top
+      in: query
+      required: false
+      description: Sort by popularity (songs of certain genre are added in most playlists)
+      schema:
+        type: boolean
+    - name: limit
+      in: query
+      required: false
+      description: Number of genres to return (ALL by default)
+      schema:
+        type: integer
+    get:
+      summary: Lists all genres
+      tags:
+      - Genres
+      responses:
+        '200':
+          description: successful
+  "/api/v1/my/account":
+    get:
+      summary: show my account
+      tags:
+      - My Account
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: not authorized
+    put:
+      summary: update my account
+      tags:
+      - My Account
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: my account updated
+        '401':
+          description: not authorized
+        '422':
+          description: unprocessable entity
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                email:
+                  type: string
+                profile_picture:
+                  type: file
+                  format: binary
+    delete:
+      summary: delete my account
+      tags:
+      - My Account
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: account deleted
+        '401':
+          description: not authorized
+  "/api/v1/my/friendships":
+    get:
+      summary: Lists friendships and friendship requests
+      tags:
+      - Friendships
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: direction
+        in: query
+        schema:
+          type: string
+          enum:
+          - received
+          - sent
+        required: false
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: not authorized
+    post:
+      summary: Creates a friendship
+      tags:
+      - Friendships
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: email
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: friendship created
+        '401':
+          description: not authorized
+        '422':
+          description: unprocessable entity
+  "/api/v1/my/friendships/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    put:
+      summary: Accept a friendship
+      tags:
+      - Friendships
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: friendship accepted
+        '404':
+          description: friendship not found
+        '401':
+          description: not authorized
+    delete:
+      summary: delete a friendships
+      tags:
+      - Friendships
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: friendship deleted
+        '401':
+          description: not authorized
+        '404':
+          description: friendship not found
+    get:
+      summary: Shows a friendship
+      tags:
+      - Friendships
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: token
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: friendship found
+        '422':
+          description: invalid parameters
+        '404':
+          description: friendship not found
+        '401':
+          description: not authorized
+  "/api/v1/my/playlists/{playlist_id}/playlist_songs":
+    post:
+      summary: Creates playlist song
+      tags:
+      - Playlist Songs
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: playlist_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: song_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '201':
+          description: created
+        '422':
+          description: unprocessable entity
+        '401':
+          description: unauthorized
+        '404':
+          description: playlist not found
+  "/api/v1/my/playlists/{playlist_id}/playlist_songs/{song_id}":
+    delete:
+      summary: Deletes playlist song
+      tags:
+      - Playlist Songs
+      parameters:
+      - name: playlist_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: song_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Song removed from playlist
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Song not found in playlist
+  "/api/v1/my/playlists/{playlist_id}/playlist_type":
+    parameters:
+    - name: playlist_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    put:
+      summary: update a playlist type
+      parameters:
+      - name: playlist_type
+        in: query
+        schema:
+          type: string
+          enum:
+          - private
+          - shared
+          - public
+        required: true
+      tags:
+      - My Playlists
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: playlist type updated
+        '422':
+          description: unprocessable entity
+        '404':
+          description: playlist not found
+        '401':
+          description: not authorized
+  "/api/v1/my/playlists":
+    get:
+      summary: Lists my playlists, or lists my friends' shared playlists
+      parameters:
+      - name: playlist_type
+        in: query
+        schema:
+          type: string
+          enum:
+          - shared
+          - my_playlists
+        required: true
+      - name: include
+        in: query
+        schema:
+          type: string
+          enum:
+          - songs
+        required: false
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - last
+          - popular
+          - featured
+        required: false
+      - name: sort_by
+        in: query
+        schema:
+          type: string
+          enum:
+          - comments_count
+          - playlist_name
+        description: 'Sort playlists by comments_count or playlist_name, default:
+          reactions_count'
+        required: false
+      - name: sort_order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+        required: false
+      - name: per_page
+        in: query
+        required: false
+        description: 'Number of playlists to return (default: 10, max 100)'
+        schema:
+          type: integer
+      tags:
+      - My Playlists
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: not authorized
+    post:
+      summary: create a playlist
+      tags:
+      - My Playlists
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: playlist created
+        '422':
+          description: unprocessable entity
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                logo:
+                  type: file
+                  format: binary
+                description:
+                  type: string
+              required:
+              - name
+  "/api/v1/my/playlists/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    put:
+      summary: update a playlist
+      tags:
+      - My Playlists
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: playlist updated
+        '422':
+          description: unprocessable entity
+        '404':
+          description: playlist not found
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                logo:
+                  type: file
+                  format: binary
+                description:
+                  type: string
+              required:
+              - name
+    delete:
+      summary: delete a playlist
+      tags:
+      - My Playlists
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: playlist deleted
+        '401':
+          description: not authorized
+        '404':
+          description: playlist not found
+  "/api/v1/my/reactions":
+    get:
+      summary: List all user reactions
+      tags:
+      - Reactions
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: not authorized
+  "/api/v1/options/{handle}":
+    get:
+      summary: Lists a option data
+      tags:
+      - Options
+      parameters:
+      - name: handle
+        in: path
+        required: true
+        example: about
+        description: Returns the option data by its handle (e.g. `about`)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Option found
+        '404':
+          description: Option not found
+  "/api/v1/playlists":
+    parameters:
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: include
+      in: query
+      schema:
+        type: string
+        enum:
+        - songs
+      required: false
+    - name: search
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: type
+      in: query
+      schema:
+        type: string
+        enum:
+        - last
+        - popular
+        - featured
+      required: false
+    - name: sort_by
+      in: query
+      schema:
+        type: string
+        enum:
+        - comments_count
+        - playlist_name
+      description: 'Sort playlists by comments_count or playlist_name, default: reactions_count'
+      required: false
+    - name: sort_order
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      required: false
+    - name: per_page
+      in: query
+      required: false
+      description: 'Number of playlists to return (default: 10, max 100)'
+      schema:
+        type: integer
+    get:
+      summary: list public playlists
+      responses:
+        '200':
+          description: successful
+  "/api/v1/playlists/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show playlist
+      security:
+      - {}
+      - bearerAuth: []
+      responses:
+        '200':
+          description: successful
+        '404':
+          description: not found
+        '403':
+          description: forbidden
+        '401':
+          description: unauthorized
+  "/api/v1/playlists/{playlist_id}/reaction":
+    parameters:
+    - name: playlist_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show Playlist Reaction
+      tags:
+      - Reactions
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: not authorized
+        '404':
+          description: not found
+    post:
+      summary: Create a new reaction
+      tags:
+      - Reactions
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: created
+        '401':
+          description: not authorized
+        '422':
+          description: unprocessable entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  description: 'Status: 1 for like, 0 for dislike'
+                  enum:
+                  - 0
+                  - 1
+              required:
+              - status
+    delete:
+      summary: Destroy a reaction
+      tags:
+      - Reactions
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: reaction destroyed
+        '401':
+          description: not authorized
+        '404':
+          description: not found
+  "/api/v1/refresh":
+    post:
+      summary: Refresh access token
+      tags:
+      - Refresh
+      parameters:
+      - name: X-Refresh-Token
+        in: header
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Access token refreshed
+        '401':
+          description: Unauthorized
+  "/api/v1/songs":
+    parameters:
+    - name: search
+      in: query
+      required: false
+      description: Search by term (in title)
+      schema:
+        type: string
+    - name: popular
+      in: query
+      required: false
+      description: Sort by popularity (songs added to most playlists)
+      schema:
+        type: boolean
+    - name: genres_count
+      in: query
+      required: false
+      description: Number of genres to return songs in
+      schema:
+        type: integer
+    - name: limit_per_genre
+      in: query
+      required: false
+      description: Number of songs per genre to return (ALL by default)
+      schema:
+        type: integer
+    - name: sort_by
+      in: query
+      schema:
+        type: string
+        enum:
+        - created_at
+      required: false
+      description: Sort by attribute
+    - name: sort_order
+      in: query
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+      required: false
+      description: Sort order
+    - name: page
+      in: query
+      required: false
+      description: 'Page number (default: 1)'
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      required: false
+      description: 'Number of songs per page (default: 20)'
+      schema:
+        type: integer
+    - name: include
+      in: query
+      schema:
+        type: string
+        enum:
+        - album
+      required: false
+      description: Include related resources (e.g. album)
+    get:
+      summary: Lists all songs
+      tags:
+      - Songs
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: successful
+        '401':
+          description: not authorized
+  "/api/v1/users":
+    parameters:
+    - name: user_type
+      in: query
+      schema:
+        type: string
+        enum:
+        - popular
+        - contributor
+      required: false
+      description: Type of users to return (popular or contributor)
+    - name: page
+      in: query
+      required: false
+      description: 'Page number (default: 1)'
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      required: false
+      description: 'Number of users per page (default: 5, max 100)'
+      schema:
+        type: integer
+    get:
+      summary: Lists required users
+      tags:
+      - Users
+      responses:
+        '200':
+          description: successful
+        '400':
+          description: bad request
+    post:
+      summary: create user
+      parameters: []
+      responses:
+        '201':
+          description: user created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: test.user.01@example.com
+                    nickname:
+                      type: string
+                      example: test_user
+                    password:
+                      type: string
+                      example: secreT!123
+                    password_confirmation:
+                      type: string
+                      example: secreT!123
+                  required:
+                  - email
+                  - nickname
+                  - password
+                  - password_confirmation
+              required:
+              - user
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: 127.0.0.1:3000
+- url: http://{localhost}
+  variables:
+    localhost:
+      default: localhost:3000
