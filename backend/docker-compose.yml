@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 services:
   web:
     container_name: epam_music_web_container
@@ -13,23 +13,29 @@ services:
       - redis
     volumes:
       - .:/app
-#      - gem_cache:/usr/local/bundle/gems
     environment:
       RAILS_ENV: development
       REDIS_URL: redis://redis:6379/0
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: epam_music_dev
+      POSTGRES_PASSWORD: development_password
+      POSTGRES_DB: epam_music_development
+      secret_jwt_signing_key: 3jdksm3o3s933kskwmj3
+
   postgres:
     image: postgres:15.4
     container_name: epam_music_postgres_container
     restart: always
     environment:
-      POSTGRES_USER: <%= Rails.application.credentials.development[:postgres_user] %>
-      POSTGRES_PASSWORD: <%= Rails.application.credentials.development[:postgres_password] %>
-      POSTGRES_DB: <%= Rails.application.credentials.development[:postgres_db] %>
+      POSTGRES_USER: epam_music_dev
+      POSTGRES_PASSWORD: development_password
+      POSTGRES_DB: epam_music_development
     ports:
       - "5434:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
   redis:
     image: redis:7.0.12
     container_name: epam_music_redis_container
@@ -38,6 +44,7 @@ services:
       - "6379:6379"
     volumes:
       - ./tmp/redis_data:/var/lib/redis/data
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: epam_music_pgadmin_container
@@ -49,6 +56,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+
   sidekiq:
     build:
       context: .
@@ -63,7 +71,12 @@ services:
     environment:
       RAILS_ENV: development
       REDIS_URL: redis://redis:6379/0
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: epam_music_dev
+      POSTGRES_PASSWORD: development_password
+      POSTGRES_DB: epam_music_development
     entrypoint: ./entrypoints/sidekiq-entrypoint.sh
+
   mailcatcher:
     image: schickling/mailcatcher
     container_name: epam_music_mailcatcher_container
@@ -79,8 +92,13 @@ services:
       - web
     networks:
       - default
+
 volumes:
   db_data:
   pgadmin-data:
 #  gem_cache:
 #    external: true
+
+#networks:
+#  default:
+#    driver: bridge
