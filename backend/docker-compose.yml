@@ -21,7 +21,7 @@ services:
       POSTGRES_PASSWORD: development_password
       POSTGRES_DB: epam_music_development
       secret_jwt_signing_key: 3jdksm3o3s933kskwmj3
-
+      DATABASE_URL: https://localhost:5342
   postgres:
     image: postgres:15.4
     container_name: epam_music_postgres_container

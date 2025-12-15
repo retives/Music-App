@@ -27,7 +27,7 @@ development:
   host: <%= ENV.fetch("POSTGRES_HOST") { "localhost" } %>
   username: <%= ENV.fetch("POSTGRES_USER") { "epam_music_dev" } %>
   password: <%= ENV.fetch("POSTGRES_PASSWORD") { "development_password" } %>
-
+  url: <%= ENV['DATABASE_URL'] %>
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
